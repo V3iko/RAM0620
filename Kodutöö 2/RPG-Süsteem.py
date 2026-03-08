@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import random
-from fcntl import FASYNC
 
 
 class Tegelane(ABC):
@@ -8,6 +7,7 @@ class Tegelane(ABC):
         self.nimi = nimi
         self._elupunktid = elupunktid # Kapseldamine ehk elupunktid on privaatne, peab endale selgeks tegema
 
+    # Abstraktnemeetod, mida saavad kõik alamklassid edasi muuta
     @abstractmethod
     def ründa(self, vastane): # Abstraktsioon
         pass
@@ -54,17 +54,20 @@ class Vibukütt(Tegelane):
         self._nooled = nooled # Kapseldamine
 
     def ründa(self, vastane): # Abstraktsioon
+        # Kontrollib kas vibukütil on veel nooli
         if self._nooled <= 0:
             print(f"{self.nimi} ei saa vibu vinnastada, nooled puuduvad!")
             return
 
+        # 50%-ne võimalus, et vibukütt laseb eriti terava noole
         if random.random() < 0.5:
             kahju = random.randint(10, 20)
-            tüüp = ("eriti terava noole")
+            tüüp = "eriti terava noole"
 
+        # Ülejäänud kordadest laseb tavalise noole
         else:
             kahju = random.randint(5, 10)
-            tüüp = ("tavalise noole")
+            tüüp = "tavalise noole"
 
         self._nooled -= 1
         print(f"{self.nimi} tulistab {tüüp}, tegi {kahju} DMG, nooli alles: {self._nooled}")
@@ -77,13 +80,14 @@ def lahing(t1, t2): # Polümorfism
     t2._külmunud = False
 
     while t1.on_elus() and t2.on_elus():
+        # Kontrollib kas mängijal t1 on _külmunud = True, kui jah siis teeb miskit (jätab roundi vahele)
         if getattr(t1, "_külmunud", False):
             print(f"{t1.nimi} on külmunud ja kaotab rünnaku!")
             t1._külmunud = False
-
+        # Kui _külmunud ei ole True, siis ründab tavaliselt edasi
         else:
            t1.ründa(t2)
-
+        # Kontrollib kas mängija on veel elus
         if not t2.on_elus():
             print(f"{t2.nimi} on surnud!")
             break
