@@ -5,7 +5,7 @@ import random
 class Tegelane(ABC):
     def __init__(self, nimi: str, elupunktid: int):
         self.nimi = nimi
-        self._elupunktid = elupunktid # Kapseldamine ehk elupunktid on privaatne, peab endale selgeks tegema
+        self._elupunktid = elupunktid # Kapseldamine ehk elusid muudetakse läbi teiste meetodite
 
     # Abstraktnemeetod, mida saavad kõik alamklassid edasi muuta
     @abstractmethod
